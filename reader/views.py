@@ -22,24 +22,12 @@ class CsrfExemptSessionAuthentication(SessionAuthentication):
         return
 
 
-class UserView(generics.ListAPIView):
-    queryset = Profile.objects.all()
-    serializer_class = ProfileSerializer
-
-
-class SingleUserView(generics.RetrieveUpdateAPIView):
-    queryset = Profile.objects.all()
-    serializer_class = ProfileSerializer
-
-
 class GetCodeView(APIView):
     def get(self, request):
         response = requests.get("https://oauth.vk.com/authorize/",
                                 #headers={'Content-Type': 'application/json'},
                                 params={'client_id': 7572251, 'redirect_uri': 'http://127.0.0.1:8000/api/token', 'display': 'page', 'response_type': 'code', 'v': '5.122', 'scope': 'friends'})
-        # return HttpResponse(response.url)
         return HttpResponseRedirect(response.url)
-        # return render(request, 'reader/auth.html', {'response': response})
 
 
 class GetTokenView(APIView):
@@ -58,12 +46,7 @@ class GetTokenView(APIView):
         last_name = result['last_name']
         Profile.objects.create(vk_id=vk_id, first_name=first_name,
                                last_name=last_name, access_token=access_token)
-        # return HttpResponse('%s\n%s\n%s\n%s' % (vk_id, first_name, last_name, access_token))
         return Response(response.json())
-        # return Response({'message': 'Got some data', 'code': request.query_params['code']})
-
-    def post(self, request):
-        return Response({'message': 'Post some data', 'data': request.data})
 
 
 class ProfileView(viewsets.ViewSet):
