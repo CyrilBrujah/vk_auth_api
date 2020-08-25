@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+    </head>
+    <body>
+        <h3>First name: {{profile.first_name}}</h3>
+        <h3>Last name: {{profile.last_name}}</h3>
+        <h3>Friends count: {{friends.count}}</h3>
+        <ul>
+            {% for friend_id in friends.items %}
+            <li>{{ friend_id }}</li>
+            {% endfor %}
+        </ul>
+    </body>
+</html>

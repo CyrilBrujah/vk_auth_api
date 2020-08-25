@@ -7,6 +7,8 @@ from rest_framework.mixins import ListModelMixin
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework import viewsets
 from rest_framework.decorators import api_view, action
+from rest_framework.renderers import TemplateHTMLRenderer
+
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 import django.db
@@ -72,7 +74,10 @@ class ProfileView(viewsets.ViewSet):
         response = requests.get("https://api.vk.com/method/friends.get", params={
             'user_id': profile.vk_id, 'access_token': profile.access_token, 'v':'5.122'
         })
-        return Response(response.json())
+        friends = response.json()['response']
+        template_name = 'reader/friends.html'
+        context = {'profile': profile, 'friends': friends}
+        return render(request, template_name, context)
 
     @action(detail=True, methods=['GET'])
     def delete_profile(self, request, pk):
