@@ -6,11 +6,12 @@ from rest_framework import generics
 from rest_framework.mixins import ListModelMixin
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework import viewsets
-from rest_framework.decorators import api_view, action
-from rest_framework.renderers import TemplateHTMLRenderer
+from rest_framework.decorators import api_view, action, renderer_classes
+from rest_framework.renderers import TemplateHTMLRenderer, StaticHTMLRenderer
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
 import django.db
 
 from .models import Profile
@@ -21,6 +22,7 @@ import requests
 
 
 version = '5.122'
+
 
 @api_view(['GET'])
 def get_code(request, format=None):
@@ -52,7 +54,7 @@ def token(request, format=None):
         profile = Profile.objects.get(pk=vk_id)
         profile.access_token = access_token
         profile.save()
-    return HttpResponseRedirect(f"http://127.0.0.1:8000/api/profiles/{vk_id}")
+    return HttpResponseRedirect(reverse('reader:profiles-detail', args=[vk_id]))
 
 
 class ProfileView(viewsets.ViewSet):
@@ -72,7 +74,7 @@ class ProfileView(viewsets.ViewSet):
     def friends(self, request, pk):
         profile = Profile.objects.get(pk=pk)
         response = requests.get("https://api.vk.com/method/friends.get", params={
-            'user_id': profile.vk_id, 'access_token': profile.access_token, 'v':'5.122'
+            'user_id': profile.vk_id, 'access_token': profile.access_token, 'v': '5.122'
         })
         friends = response.json()['response']
         template_name = 'reader/friends.html'
@@ -83,4 +85,12 @@ class ProfileView(viewsets.ViewSet):
     def delete_profile(self, request, pk):
         profile = Profile.objects.get(pk=pk)
         profile.delete()
-        return HttpResponseRedirect('http://127.0.0.1:8000/api/profiles')
+        return HttpResponseRedirect(reverse('reader:profiles-list'))
+
+
+
+    @action(detail=True, methods=['GET'], renderer_classes=([StaticHTMLRenderer]))
+    def testaction(self, request, pk):
+        #renderer_classes = [StaticHTMLRenderer]
+        data = '<html><body><h1>Hello, world</h1></body></html>'
+        return Response(data)

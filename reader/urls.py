@@ -7,8 +7,8 @@ app_name = "reader"
 
 
 urlpatterns = [
-    path('get_code/', get_code),
-    path('token', token),
+    path('get_code/', get_code, name='get_code'),
+    path('token', token, name='token'),
     #path('friends/', friends),
 ]
 
@@ -16,3 +16,7 @@ router = routers.DefaultRouter()
 router.register(r'profiles', ProfileView, basename='profiles')
 
 urlpatterns += router.urls
+
+print('URLPATTERNS:\n')
+for url in urlpatterns:
+    print(url)

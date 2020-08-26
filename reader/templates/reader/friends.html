@@ -8,10 +8,10 @@
         <h3>First name: {{profile.first_name}}</h3>
         <h3>Last name: {{profile.last_name}}</h3>
         <h3>Friends count: {{friends.count}}</h3>
-        <ul>
+        <ol>
             {% for friend_id in friends.items %}
-            <li>{{ friend_id }}</li>
+            <li><a href="https://vk.com/id{{ friend_id }}">{{ friend_id }}</a></li>
             {% endfor %}
-        </ul>
+        </ol>
     </body>
 </html>
