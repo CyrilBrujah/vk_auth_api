@@ -17,6 +17,6 @@ router.register(r'profiles', ProfileView, basename='profiles')
 
 urlpatterns += router.urls
 
-print('URLPATTERNS:\n')
+"""print('URLPATTERNS:\n')
 for url in urlpatterns:
-    print(url)
+    print(url)"""

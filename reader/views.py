@@ -70,7 +70,7 @@ class ProfileView(viewsets.ViewSet):
         serializer = ProfileSerializer(profile)
         return Response(serializer.data)
 
-    @action(detail=True, methods=['GET'])
+    @action(detail=True, methods=['GET'], renderer_classes=([TemplateHTMLRenderer]))
     def friends(self, request, pk):
         profile = Profile.objects.get(pk=pk)
         response = requests.get("https://api.vk.com/method/friends.get", params={
@@ -79,7 +79,7 @@ class ProfileView(viewsets.ViewSet):
         friends = response.json()['response']
         template_name = 'reader/friends.html'
         context = {'profile': profile, 'friends': friends}
-        return render(request, template_name, context)
+        return Response(context, template_name=template_name)
 
     @action(detail=True, methods=['GET'])
     def delete_profile(self, request, pk):
