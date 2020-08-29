@@ -9,7 +9,6 @@ app_name = "reader"
 urlpatterns = [
     path('get_code/', get_code, name='get_code'),
     path('token', token, name='token'),
-    #path('friends/', friends),
 ]
 
 router = routers.DefaultRouter()
