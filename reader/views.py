@@ -45,7 +45,6 @@ def token(request, format=None):
                             params={'client_id': client_id, 'client_secret': '5IwMHn55CcxuhnDt8dZj',
                                     'redirect_uri': 'http://127.0.0.1:8000/api/token', 'code': code})
     access_token = response.json()['access_token']
-    print(access_token)
     user_id = response.json()['user_id']
     response = requests.get("https://api.vk.com/method/users.get",
                             params={'user_id': user_id, 'access_token': access_token, 'v': version})
@@ -64,7 +63,7 @@ def token(request, format=None):
     return HttpResponseRedirect(reverse('reader:profiles-detail', args=[vk_id]))
 
 
-class ProfileView(viewsets.ViewSet):
+class ProfilesViewSet(viewsets.ViewSet):
     """
     ViewSet для получения информации о профилях, хранящихся в БД
     """

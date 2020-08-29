@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import ProfileView, get_code, token
+from .views import ProfilesViewSet, get_code, token
 from rest_framework import routers
 
 app_name = "reader"
@@ -12,6 +12,6 @@ urlpatterns = [
 ]
 
 router = routers.DefaultRouter()
-router.register(r'profiles', ProfileView, basename='profiles')
+router.register(r'profiles', ProfilesViewSet, basename='profiles')
 
 urlpatterns += router.urls
