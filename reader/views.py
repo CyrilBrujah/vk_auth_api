@@ -28,7 +28,7 @@ version = '5.122'
 def get_code(request, format=None):
     response = requests.get("https://oauth.vk.com/authorize/",
                             #headers={'Content-Type': 'application/json'},
-                            params={'client_id': 7572251, 'redirect_uri': 'http://127.0.0.1:8000/api/token', 'display': 'page', 'response_type': 'code', 'v': '5.122'})
+                            params={'client_id': 7572251, 'scope':'photos', 'redirect_uri': 'http://127.0.0.1:8000/api/token', 'display': 'page', 'response_type': 'code', 'v': '5.122'})
     return HttpResponseRedirect(response.url)
 
 
@@ -87,10 +87,9 @@ class ProfileView(viewsets.ViewSet):
         profile.delete()
         return HttpResponseRedirect(reverse('reader:profiles-list'))
 
-
-
-    @action(detail=True, methods=['GET'], renderer_classes=([StaticHTMLRenderer]))
+    @action(detail=True, methods=['GET'])
     def testaction(self, request, pk):
-        #renderer_classes = [StaticHTMLRenderer]
-        data = '<html><body><h1>Hello, world</h1></body></html>'
-        return Response(data)
+        profile = Profile.objects.get(pk=pk)
+        response = requests.get("https://api.vk.com/method/messages.getImportantMessages",
+                                params={'user_id': pk, 'access_token': profile.access_token, 'v': version})
+        return Response(response.json())
